@@ -19,6 +19,9 @@
                     <x-nav-link :href="route('todo.index')" :active="request()->routeIs('todo.*')">
                         {{ __('Modul Pembelajaran (Admin)') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('latihan_soal.index')" :active="request()->routeIs('latihan_soal.*')">
+                        {{ __('Latihan Soal (Admin)') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')">
                         {{ __('Category') }}
                     </x-nav-link>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LatihanSoalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
@@ -31,6 +32,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
+    Route::get('/latihan_soal', [LatihanSoalController::class, 'index'])->name('latihan_soal.index');
+    Route::post('/latihan_soal', [LatihanSoalController::class, 'store'])->name('latihan_soal.store');
+    Route::get('/latihan_soal/create', [LatihanSoalController::class, 'create'])->name('latihan_soal.create');
+    Route::get('/latihan_soal/{latihan_soal}/edit', [LatihanSoalController::class, 'edit'])->name('latihan_soal.edit');
+    Route::delete('/latihan_soal/{latihan_soal}', [LatihanSoalController::class, 'destroy'])->name('latihan_soal.destroy');
+
+
     Route::get('/todo', [TodoController::class, 'index'])->name('todo.index');
     Route::post('/todo', [TodoController::class, 'store'])->name('todo.store');
     Route::get('/todo/create', [TodoController::class, 'create'])->name('todo.create');
@@ -40,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/todo/{todo}/incomplete', [TodoController::class, 'uncomplete'])->name('todo.uncomplete');
     Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::delete('/todo', [TodoController::class, 'destroyCompleted'])->name('todo.deleteallcompleted');
+
 
     Route::resource('/category', CategoryController::class);
 
