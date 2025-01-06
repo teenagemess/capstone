@@ -33,10 +33,23 @@
                             <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
                         </div>
 
+                        <div class="mb-6">
+                            <x-input-label for="jenjang_category_id" :value="__('Jenjang Category')" />
+                            <x-select name="jenjang_category_id" id="jenjang_category_id" class="block w-full mt-1" required>
+                                <option value="">Select Jenjang Category</option>
+                                @foreach($jenjangCategories as $jenjang_categories)
+                                    <option value="{{ $jenjang_categories->id }}">{{ $jenjang_categories->title }}</option>
+                                @endforeach
+                            </x-select>
+                            <x-input-error class="mt-2" :messages="$errors->get('jenjang_category_id')" />
+                        </div>
+
                         <!-- Input untuk deskripsi -->
                         <div class="mb-6">
                             <x-input-label for="description" :value="__('Deskripsi')" />
-                            <x-textarea id="description" name="description" class="block w-full mt-1" rows="4" placeholder="Masukkan deskripsi latihan soal">{{ old('description') }}</x-textarea>
+                            <trix-toolbar id="my_toolbar" input="description" class="bg-gray-800 dark:bg-gray-100 border-gray-700 dark:border-gray-300 rounded-md;"></trix-toolbar>
+                            <input id="description" type="hidden" name="description" value="{{ old('description') }}">
+                            <trix-editor toolbar="my_toolbar" input="description" class="text-gray-100 dark:text-gray-900 bg-gray-900 dark:bg-gray-100 border-gray-700 dark:border-gray-300 rounded-md;"></trix-editor>
                             <x-input-error class="mt-2" :messages="$errors->get('description')" />
                         </div>
 

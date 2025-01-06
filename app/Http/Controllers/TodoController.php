@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use App\Models\Category;
+use App\Models\JenjangCategory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -14,9 +15,10 @@ class TodoController extends Controller
     {
         $search = request('search');
         $categoryFilter = request('category_id'); // Ambil kategori filter
+        $jenjangCategoryFilter = request('jenjang_category_id'); // Ambil filter kategori jenjang
 
         // Query awal untuk Todo
-        $todosQuery = Todo::with('category')
+        $todosQuery = Todo::with('category', 'jenjangCategory')  // Pastikan hubungan jenjangCategory dimuat
             ->where('user_id', auth()->user()->id);
 
         // Pencarian berdasarkan title atau description
@@ -32,29 +34,38 @@ class TodoController extends Controller
             $todosQuery->where('category_id', $categoryFilter);
         }
 
+        // Filter berdasarkan kategori jenjang
+        if ($jenjangCategoryFilter) {
+            $todosQuery->where('jenjang_category_id', $jenjangCategoryFilter);
+        }
+
         // Ambil todos dengan pagination
         $todos = $todosQuery->orderBy('is_complete', 'asc')
                             ->orderBy('created_at', 'desc')
                             ->paginate(10)
                             ->withQueryString(); // Menyimpan query string untuk pencarian dan filter di URL
 
-        // Dapatkan daftar kategori untuk dropdown
+        // Dapatkan daftar kategori dan jenjang kategori untuk dropdown
         $categories = Category::where('user_id', auth()->user()->id)->get();
+        $jenjangCategories = JenjangCategory::where('user_id', auth()->user()->id)->get();  // Ambil kategori jenjang
 
         $todosCompleted = Todo::where('user_id', auth()->user()->id)
             ->where('is_complete', true)
             ->count();
 
-        return view('todo.index', compact('todos', 'todosCompleted', 'categories', 'categoryFilter'));
+        return view('todo.index', compact('todos', 'todosCompleted', 'categories', 'jenjangCategories', 'categoryFilter', 'jenjangCategoryFilter'));
     }
+
 
 
 
     public function create()
     {
         $categories = Category::where('user_id', auth()->user()->id)->get();
-        return view('todo.create', compact('categories'));
+        $jenjangCategories = JenjangCategory::where('user_id', auth()->user()->id)->get();  // Ambil kategori jenjang
+        return view('todo.create', compact('categories', 'jenjangCategories'));
     }
+
 
     public function store(Request $request)
     {
@@ -64,6 +75,12 @@ class TodoController extends Controller
             'category_id' => [
                 'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+            ],
+            'jenjang_category_id' => [
+                'nullable',
+                Rule::exists('jenjang_categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
                 })
             ],
@@ -87,6 +104,7 @@ class TodoController extends Controller
             'title' => ucfirst($request->title),
             'user_id' => auth()->user()->id,
             'category_id' => $request->category_id,
+            'jenjang_category_id' => $request->jenjang_category_id,
             'description' => $request->description, // Menyimpan deskripsi
             'file_path' => $filePath, // Menyimpan path file
             'image_path' => $imagePath, // Menyimpan path file
@@ -95,16 +113,17 @@ class TodoController extends Controller
 
         return redirect()->route('todo.index')->with('success', 'Modul created successfully!');
     }
-
     public function edit(Todo $todo)
     {
         $categories = Category::where('user_id', auth()->user()->id)->get();
+        $jenjangCategories = JenjangCategory::where('user_id', auth()->user()->id)->get();  // Ambil kategori jenjang
         if (auth()->user()->id == $todo->user_id) {
-            return view('todo.edit', compact('todo', 'categories'));
+            return view('todo.edit', compact('todo', 'categories', 'jenjangCategories'));
         } else {
             return redirect()->route('todo.index')->with('danger','You are not authorized to edit this todo!');
         }
     }
+
 
     public function update(Request $request, Todo $todo)
     {
@@ -113,6 +132,12 @@ class TodoController extends Controller
             'category_id' => [
                 'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+            ],
+            'jenjang_category_id' => [
+                'nullable',
+                Rule::exists('jenjang_categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
                 })
             ],
@@ -136,12 +161,14 @@ class TodoController extends Controller
         $todo->update([
             'title' => ucfirst($request->title),
             'category_id' => $request->category_id,
+            'jenjang_category_id' => $request->jenjang_category_id,  // Update jenjang_category_id
             'description' => $request->description,
             'file_path' => $filePath,
         ]);
 
         return redirect()->route('todo.index')->with('success', 'Modul updated successfully!');
     }
+
 
     public function complete(Todo $todo)
     {

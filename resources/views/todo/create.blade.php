@@ -1,4 +1,14 @@
 <x-app-layout>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+        <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+
+    </head>
+
+
+
+
+
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Todo') }}
@@ -30,12 +40,28 @@
                             <x-input-error class="mt-2" :messages="$errors->get('category_id')" />
                         </div>
 
+                        <div class="mb-6">
+                            <x-input-label for="jenjang_category_id" :value="__('Jenjang Category')" />
+                            <x-select name="jenjang_category_id" id="jenjang_category_id" class="block w-full mt-1" required>
+                                <option value="">Select Jenjang Category</option>
+                                @foreach($jenjangCategories as $jenjang_categories)
+                                    <option value="{{ $jenjang_categories->id }}">{{ $jenjang_categories->title }}</option>
+                                @endforeach
+                            </x-select>
+                            <x-input-error class="mt-2" :messages="$errors->get('jenjang_category_id')" />
+                        </div>
+
                         <!-- Input untuk deskripsi -->
                         <div class="mb-6">
                             <x-input-label for="description" :value="__('Description')" />
-                            <x-textarea id="description" name="description" class="block w-full mt-1" rows="4" placeholder="Enter the description">{{ old('description') }}</x-textarea>
+                            <trix-toolbar id="my_toolbar" input="description" class="bg-gray-800 dark:bg-gray-100 border-gray-700 dark:border-gray-300 rounded-md;"></trix-toolbar>
+                            <input id="description" type="hidden" name="description" value="{{ old('description') }}">
+                            <trix-editor toolbar="my_toolbar" input="description" class="text-gray-100 dark:text-gray-900 bg-gray-900 dark:bg-gray-100 border-gray-700 dark:border-gray-300 rounded-md;"></trix-editor>
                             <x-input-error class="mt-2" :messages="$errors->get('description')" />
                         </div>
+
+
+
 
                         <div class="mb-6">
                             <x-text-input id="youtube_video_url" name="youtube_video_url" type="text" class="w-full" placeholder="YouTube Video URL" />
@@ -62,4 +88,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+    document.addEventListener("trix-before-initialize", () => {
+    // Change Trix.config if you need
+    })
+    </script>
+
 </x-app-layout>
+

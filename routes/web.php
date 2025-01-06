@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\CategoryFrontendController;
 use App\Http\Controllers\LatihanSoalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\API\APIProfileController;
+use App\Http\Controllers\JenjangCategoryController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\TodoFrontendController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +30,24 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/categories', [CategoryFrontendController::class, 'index'])->name('frontend.categories.index');
+    Route::get('/categories/{category}', [CategoryFrontendController::class, 'show'])->name('frontend.categories.show');
+
+        // Route untuk menampilkan todos berdasarkan kategori
+    Route::get('/categories/{category}/todos', [TodoFrontendController::class, 'show'])->name('todo.frontend.category');
+
+    // Route untuk menampilkan detail todo
+    Route::get('/todos/{todo}', [TodoFrontendController::class, 'detail'])->name('todo.frontend.detail');
+
+
+    Route::get('/todos', [TodoFrontendController::class, 'index'])->name('todo.index');
+    Route::get('/todos/{id}', [TodoFrontendController::class, 'show'])->name('todo.show');
 
 
     Route::get('/latihan_soal', [LatihanSoalController::class, 'index'])->name('latihan_soal.index');
@@ -38,6 +55,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/latihan_soal/create', [LatihanSoalController::class, 'create'])->name('latihan_soal.create');
     Route::get('/latihan_soal/{latihan_soal}/edit', [LatihanSoalController::class, 'edit'])->name('latihan_soal.edit');
     Route::delete('/latihan_soal/{latihan_soal}', [LatihanSoalController::class, 'destroy'])->name('latihan_soal.destroy');
+
+    Route::resource('/jenjang_category', JenjangCategoryController::class);
+
+
+
+        // Route::get('/jenjang_category', [JenjangCategoryController::class, 'index'])->name('jenjang_category.index');
+        // Route::get('/jenjang_category/create', [JenjangCategoryController::class, 'create'])->name('jenjang_category.create');
+        // Route::post('/jenjang_category', [JenjangCategoryController::class, 'store'])->name('jenjang_category.store');
+        // Route::get('/jenjang_category/{jenjangCategory}/edit', [JenjangCategoryController::class, 'edit'])->name('jenjang_category.edit');
+        // Route::patch('/jenjang_category/{jenjangCategory}', [JenjangCategoryController::class, 'update'])->name('jenjang_category.update');
+        // Route::delete('/jenjang_category/{jenjangCategory}', [JenjangCategoryController::class, 'destroy'])->name('jenjang_category.destroy');
 
 
     Route::get('/todo', [TodoController::class, 'index'])->name('todo.index');
@@ -49,6 +77,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/todo/{todo}/incomplete', [TodoController::class, 'uncomplete'])->name('todo.uncomplete');
     Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::delete('/todo', [TodoController::class, 'destroyCompleted'])->name('todo.deleteallcompleted');
+
+    Route::resource('siswa', SiswaController::class);
 
 
     Route::resource('/category', CategoryController::class);

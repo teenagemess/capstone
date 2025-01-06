@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Todo Category') }}
+            {{ __('Daftar Siswa') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
                 <div class="p-6 text-xl text-gray-900 dark:text-gray-100">
                     <div class="flex items-center justify-between">
                         <div>
-                            <x-create-button href="{{ route('category.create') }}" />
+                            <x-create-button href="{{ route('siswa.create') }}" />
                         </div>
                         <div>
                             @if (session('success'))
@@ -35,7 +35,22 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Mata Pelajaran
+                                    Nama Siswa
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Tanggal Lahir
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    No. HP
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Email
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Tanggal Masuk
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Tanggal Keluar
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -43,16 +58,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($categories as $category)
+                            @forelse ($siswas as $siswa)
                             <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
                                 <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                    <a href="{{ route('category.edit', $category) }}" class="hover:underline">
-                                        {{$category->title}}
+                                    <a href="{{ route('siswa.edit', $siswa) }}" class="hover:underline">
+                                        {{$siswa->nama_siswa}}
                                     </a>
                                 </td>
                                 <td class="px-6 py-4">
+                                    {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('d-m-Y') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $siswa->no_hp }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $siswa->email }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ \Carbon\Carbon::parse($siswa->tanggal_masuk)->format('d-m-Y') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if ($siswa->tanggal_keluar)
+                                        {{ \Carbon\Carbon::parse($siswa->tanggal_keluar)->format('d-m-Y') }}
+                                    @else
+                                        <span class="text-gray-500">Masih aktif</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
                                     <div class="flex space-x-3">
-                                        <form action="{{ route('category.destroy', $category) }}" method="Post">
+                                        <form action="{{ route('siswa.destroy', $siswa) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 dark:text-red-400">
@@ -61,12 +95,11 @@
                                         </form>
                                     </div>
                                 </td>
-
                             </tr>
                             @empty
                             <tr class="bg-white dark:bg-gray-800">
-                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                    Empty
+                                <td colspan="7" class="px-6 py-4 font-medium text-center text-gray-900 dark:text-white">
+                                    No data available
                                 </td>
                             </tr>
                             @endforelse
@@ -76,7 +109,4 @@
             </div>
         </div>
     </div>
-
-
-
 </x-app-layout>

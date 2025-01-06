@@ -29,6 +29,9 @@ class TodoController extends Controller
                 ]
             ], 200);
         }
+
+        $todos = Todo::with('jenjangCategory')->get();
+
         $todos = Todo::with('category')
             ->where('user_id', auth()->user()->id)
             ->latest()

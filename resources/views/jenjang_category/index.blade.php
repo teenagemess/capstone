@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Todo Category') }}
+            {{ __('Jenjang Category') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
                 <div class="p-6 text-xl text-gray-900 dark:text-gray-100">
                     <div class="flex items-center justify-between">
                         <div>
-                            <x-create-button href="{{ route('category.create') }}" />
+                            <x-create-button href="{{ route('jenjang_category.create') }}" />
                         </div>
                         <div>
                             @if (session('success'))
@@ -35,7 +35,7 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Mata Pelajaran
+                                    Jenjang
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
@@ -43,16 +43,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($categories as $category)
+                            @forelse ($jenjangCategories as $jenjangCategory)
                             <tr class="odd:bg-white odd:dark:bg-gray-800 even:bg-gray-50 even:dark:bg-gray-700">
                                 <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                                    <a href="{{ route('category.edit', $category) }}" class="hover:underline">
-                                        {{$category->title}}
+                                    <a href="{{ route('jenjang_category.edit', $jenjangCategory) }}" class="hover:underline">
+                                        {{$jenjangCategory->title}}
                                     </a>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex space-x-3">
-                                        <form action="{{ route('category.destroy', $category) }}" method="Post">
+                                        <form action="{{ route('jenjang_category.destroy', $jenjangCategory) }}" method="Post">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 dark:text-red-400">
@@ -76,7 +76,5 @@
             </div>
         </div>
     </div>
-
-
 
 </x-app-layout>

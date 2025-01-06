@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Todo;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Siswa;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
@@ -36,5 +37,7 @@ class DatabaseSeeder extends Seeder
                 'is_admin' => false
             ]
         );
+
+        Siswa::factory(10)->create();
     }
 }

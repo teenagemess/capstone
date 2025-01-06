@@ -46,10 +46,13 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Title
+                                    Judul
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Category
+                                    Mata Pelajaran
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Jenjang
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Description
@@ -77,6 +80,11 @@
                                 <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                     @if ($todo->category_id)
                                     {{ $todo->category->title }}
+                                    @endif
+                                </td>
+                                <td scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                    @if ($todo->jenjang_category_id)
+                                    {{ $todo->jenjangCategory->title }}
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -149,7 +157,7 @@
                         </tbody>
                     </table>
                 </div>
-                @if ($todosCompleted > 1)
+                {{-- @if ($todosCompleted > 1)
                 <div class="p-6 text-xl text-gray-900 dark:text-gray-100">
                     <form action="{{ route('todo.deleteallcompleted') }}" method="Post">
                         @csrf
@@ -159,7 +167,7 @@
                         </x-primary-button>
                     </form>
                 </div>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>

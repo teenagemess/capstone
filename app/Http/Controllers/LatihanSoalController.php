@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LatihanSoal;
 use App\Models\Category;
+use App\Models\JenjangCategory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -14,9 +15,10 @@ class LatihanSoalController extends Controller
     {
         $search = request('search');
         $categoryFilter = request('category_id'); // Ambil kategori filter
+        $jenjangCategoryFilter = request('jenjang_category_id'); // Ambil filter kategori jenjang
 
         // Query awal untuk LatihanSoal
-        $latihanSoalQuery = LatihanSoal::with('category')
+        $latihanSoalQuery = LatihanSoal::with('category', 'jenjangCategory')  // Pastikan hubungan jenjangCategory dimuat
             ->where('user_id', auth()->user()->id);
 
         // Pencarian berdasarkan title atau description
@@ -32,26 +34,33 @@ class LatihanSoalController extends Controller
             $latihanSoalQuery->where('category_id', $categoryFilter);
         }
 
+        // Filter berdasarkan kategori jenjang
+        if ($jenjangCategoryFilter) {
+            $latihanSoalQuery->where('jenjang_category_id', $jenjangCategoryFilter);
+        }
+
         // Ambil latihan soal dengan pagination
         $latihanSoals = $latihanSoalQuery->orderBy('is_complete', 'asc')
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->withQueryString(); // Menyimpan query string untuk pencarian dan filter di URL
 
-        // Dapatkan daftar kategori untuk dropdown
+        // Dapatkan daftar kategori dan jenjang kategori untuk dropdown
         $categories = Category::where('user_id', auth()->user()->id)->get();
+        $jenjangCategories = JenjangCategory::where('user_id', auth()->user()->id)->get();
 
         $latihanSoalCompleted = LatihanSoal::where('user_id', auth()->user()->id)
             ->where('is_complete', true)
             ->count();
 
-        return view('latihan_soal.index', compact('latihanSoals', 'latihanSoalCompleted', 'categories', 'categoryFilter'));
+        return view('latihan_soal.index', compact('latihanSoals', 'latihanSoalCompleted', 'categories', 'jenjangCategories', 'categoryFilter', 'jenjangCategoryFilter'));
     }
 
     public function create()
     {
         $categories = Category::where('user_id', auth()->user()->id)->get();
-        return view('latihan_soal.create', compact('categories'));
+        $jenjangCategories = JenjangCategory::where('user_id', auth()->user()->id)->get();
+        return view('latihan_soal.create', compact('categories', 'jenjangCategories'));
     }
 
     public function store(Request $request)
@@ -65,9 +74,15 @@ class LatihanSoalController extends Controller
                     $query->where('user_id', auth()->user()->id);
                 })
             ],
+            'jenjang_category_id' => [
+                'nullable',
+                Rule::exists('jenjang_categories', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+            ],
             'description' => 'nullable|string', // Validasi deskripsi
             'file_path' => 'nullable|file|mimes:pdf|max:10240', // Validasi file PDF
-            'image_path' => 'nullable|file|mimes:jpg,png|max:10240', // Validasi file PDF
+            'image_path' => 'nullable|file|mimes:jpg,png|max:10240', // Validasi file gambar
             'youtube_video_url' => 'nullable|url',
         ]);
 
@@ -84,10 +99,11 @@ class LatihanSoalController extends Controller
             'title' => ucfirst($request->title),
             'user_id' => auth()->user()->id,
             'category_id' => $request->category_id,
-            'description' => $request->description, // Menyimpan deskripsi
-            'file_path' => $filePath, // Menyimpan path file
-            'image_path' => $imagePath, // Menyimpan path file
-            'youtube_video_url' => $request->youtube_video_url, // Simpan URL YouTube
+            'jenjang_category_id' => $request->jenjang_category_id,
+            'description' => $request->description,
+            'file_path' => $filePath,
+            'image_path' => $imagePath,
+            'youtube_video_url' => $request->youtube_video_url,
         ]);
 
         return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal created successfully!');
@@ -96,10 +112,12 @@ class LatihanSoalController extends Controller
     public function edit(LatihanSoal $latihanSoal)
     {
         $categories = Category::where('user_id', auth()->user()->id)->get();
+        $jenjangCategories = JenjangCategory::where('user_id', auth()->user()->id)->get();
+
         if (auth()->user()->id == $latihanSoal->user_id) {
-            return view('latihan_soal.edit', compact('latihanSoal', 'categories'));
+            return view('latihan_soal.edit', compact('latihanSoal', 'categories', 'jenjangCategories'));
         } else {
-            return redirect()->route('latihan_soal.index')->with('danger','You are not authorized to edit this latihan soal!');
+            return redirect()->route('latihan_soal.index')->with('danger', 'You are not authorized to edit this latihan soal!');
         }
     }
 
@@ -110,6 +128,12 @@ class LatihanSoalController extends Controller
             'category_id' => [
                 'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+            ],
+            'jenjang_category_id' => [
+                'nullable',
+                Rule::exists('jenjang_categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
                 })
             ],
@@ -133,6 +157,7 @@ class LatihanSoalController extends Controller
         $latihanSoal->update([
             'title' => ucfirst($request->title),
             'category_id' => $request->category_id,
+            'jenjang_category_id' => $request->jenjang_category_id,
             'description' => $request->description,
             'file_path' => $filePath,
         ]);
@@ -148,7 +173,7 @@ class LatihanSoalController extends Controller
             ]);
             return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal completed successfully!');
         } else {
-            return redirect()->route('latihan_soal.index')->with('danger','You are not authorized to complete this latihan soal!');
+            return redirect()->route('latihan_soal.index')->with('danger', 'You are not authorized to complete this latihan soal!');
         }
     }
 
@@ -160,7 +185,7 @@ class LatihanSoalController extends Controller
             ]);
             return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal uncompleted successfully!');
         } else {
-            return redirect()->route('latihan_soal.index')->with('danger','You are not authorized to uncomplete this latihan soal!');
+            return redirect()->route('latihan_soal.index')->with('danger', 'You are not authorized to uncomplete this latihan soal!');
         }
     }
 
@@ -175,7 +200,7 @@ class LatihanSoalController extends Controller
             $latihanSoal->delete();
             return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal deleted successfully!');
         } else {
-            return redirect()->route('latihan_soal.index')->with('danger','You are not authorized to delete this latihan soal!');
+            return redirect()->route('latihan_soal.index')->with('danger', 'You are not authorized to delete this latihan soal!');
         }
     }
 

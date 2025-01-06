@@ -15,6 +15,7 @@ class Todo extends Model
         'title',
         'user_id',
         'category_id',
+        'jenjang_category_id',
         'is_complete',
         'image_path',
         'file_path',
@@ -28,5 +29,10 @@ class Todo extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function jenjangCategory()
+    {
+        return $this->belongsTo(JenjangCategory::class); // Relasi ke model JenjangCategory
     }
 }
