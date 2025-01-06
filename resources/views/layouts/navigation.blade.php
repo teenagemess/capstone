@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('frontend.categories.index')" :active="request()->routeIs('frontend.categories.index')">
                         {{ __('Modul Pembelajaran') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('frontend.latihan_soals.index')" :active="request()->routeIs('frontend.latihan_soals.index')">
+                        {{ __('Latihan Soal') }}
+                    </x-nav-link>
                     {{-- @can('admin')
                     <x-nav-link :href="route('todo.index')" :active="request()->routeIs('todo.*')">
                         {{ __('Modul Pembelajaran (Admin)') }}
