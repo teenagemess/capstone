@@ -37,7 +37,6 @@ class DatabaseSeeder extends Seeder
                 'is_admin' => false
             ]
         );
-
         Siswa::factory(10)->create();
     }
 }

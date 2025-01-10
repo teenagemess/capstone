@@ -12,6 +12,9 @@ use App\Http\Controllers\TodoFrontendController;
 use App\Http\Controllers\LatihanSoalCategoryFrontendController;
 use App\Http\Controllers\CategoryFrontendController;
 use App\Http\Controllers\LatihanSoalFrontendController;
+use App\Http\Controllers\CommentController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +57,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/latihan-categories', [LatihanSoalCategoryFrontendController::class, 'index'])->name('frontend.latihan_soals.index');
     Route::get('/latihan-categories/{category}', [LatihanSoalCategoryFrontendController::class, 'show'])->name('frontend.latihan_soals.show');
     Route::get('/latihan-soal/{latihanSoal}', [LatihanSoalFrontendController::class, 'detail'])->name('frontend.latihan_soals.detail');
+
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/latihan-soal/{latihanSoalId}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::post('/todos/{todo}/comments', [CommentController::class, 'storeTodo'])->name('comments.storeTodo');
 
 
     Route::middleware('admin')->group(function () {

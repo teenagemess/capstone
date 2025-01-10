@@ -72,27 +72,28 @@ class LatihanSoalController extends Controller
                 'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
-                })
+                }),
             ],
             'jenjang_category_id' => [
                 'nullable',
                 Rule::exists('jenjang_categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
-                })
+                }),
             ],
-            'description' => 'nullable|string', // Validasi deskripsi
-            'file_path' => 'nullable|file|mimes:pdf|max:10240', // Validasi file PDF
-            'image_path' => 'nullable|file|mimes:jpg,png|max:10240', // Validasi file gambar
+            'description' => 'nullable|string',
+            'file_path' => 'nullable|file|mimes:pdf|max:10240',
+            'image_path' => 'nullable|file|mimes:jpg,png|max:10240',
             'youtube_video_url' => 'nullable|url',
+            'google_form_url' => 'nullable|url', // Validasi URL untuk Google Form
         ]);
 
         $filePath = $request->hasFile('file_path') && $request->file('file_path')->isValid()
-        ? $request->file('file_path')->store('latihan_soals', 'public')
-        : null;
+            ? $request->file('file_path')->store('latihan_soals', 'public')
+            : null;
 
         $imagePath = $request->hasFile('image_path') && $request->file('image_path')->isValid()
-        ? $request->file('image_path')->store('images', 'public')
-        : null;
+            ? $request->file('image_path')->store('images', 'public')
+            : null;
 
         // Membuat LatihanSoal baru dan menyimpannya
         LatihanSoal::create([
@@ -104,10 +105,12 @@ class LatihanSoalController extends Controller
             'file_path' => $filePath,
             'image_path' => $imagePath,
             'youtube_video_url' => $request->youtube_video_url,
+            'google_form_url' => $request->google_form_url, // Menyimpan Google Form URL
         ]);
 
         return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal created successfully!');
     }
+
 
     public function edit(LatihanSoal $latihanSoal)
     {
@@ -129,41 +132,43 @@ class LatihanSoalController extends Controller
                 'nullable',
                 Rule::exists('categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
-                })
+                }),
             ],
             'jenjang_category_id' => [
                 'nullable',
                 Rule::exists('jenjang_categories', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->user()->id);
-                })
+                }),
             ],
-            'description' => 'nullable|string', // Validasi deskripsi
-            'file_path' => 'nullable|file|mimes:pdf|max:10240', // Validasi file PDF
+            'description' => 'nullable|string',
+            'file_path' => 'nullable|file|mimes:pdf|max:10240',
+            'image_path' => 'nullable|file|mimes:jpg,png|max:10240',
+            'youtube_video_url' => 'nullable|url',
+            'google_form_url' => 'nullable|url', // Validasi URL Google Form
         ]);
 
-        // Handle file upload on update
         if ($request->hasFile('file_path')) {
-            // Hapus file lama jika ada
             if ($latihanSoal->file_path && Storage::exists('public/' . $latihanSoal->file_path)) {
                 Storage::delete('public/' . $latihanSoal->file_path);
             }
-            // Simpan file baru
             $filePath = $request->file('file_path')->store('latihan_soals', 'public');
         } else {
-            $filePath = $latihanSoal->file_path; // Jika tidak ada file baru, gunakan file yang lama
+            $filePath = $latihanSoal->file_path;
         }
 
-        // Update latihan soal dengan data baru
         $latihanSoal->update([
             'title' => ucfirst($request->title),
             'category_id' => $request->category_id,
             'jenjang_category_id' => $request->jenjang_category_id,
             'description' => $request->description,
             'file_path' => $filePath,
+            'youtube_video_url' => $request->youtube_video_url,
+            'google_form_url' => $request->google_form_url, // Update Google Form URL
         ]);
 
         return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal updated successfully!');
     }
+
 
     public function complete(LatihanSoal $latihanSoal)
     {

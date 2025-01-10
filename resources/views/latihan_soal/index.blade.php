@@ -67,6 +67,9 @@
                                 <th scope="col" class="px-6 py-3 text-center">
                                     Video Modul
                                 </th>
+                                <th scope="col" class="px-6 py-3 text-center">
+                                    form
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
                                 </th>
@@ -133,6 +136,17 @@
                                     @else
                                         No video
                                     @endif
+                                </td>
+
+                                <td>
+                                    @if ($latihanSoal->google_form_url)
+                                    <a href="{{ $latihanSoal->google_form_url }}" target="_blank" class="text-blue-500 hover:underline">
+                                        Lihat Google Form
+                                    </a>
+                                    @else
+                                    No Form
+                                    @endif
+
                                 </td>
 
                                 <td class="px-6 py-4">

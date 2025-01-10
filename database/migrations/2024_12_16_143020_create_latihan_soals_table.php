@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('file_path')->nullable();
             $table->string('image_path')->nullable();
             $table->string('youtube_video_url')->nullable();
+            $table->string('google_form_url')->nullable(); // Tambahkan kolom ini
             $table->text('description')->nullable();
         });
     }

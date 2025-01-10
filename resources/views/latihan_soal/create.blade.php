@@ -58,6 +58,16 @@
                         </div>
 
                         <div class="mb-6">
+                            <x-input-label for="google_form_url" :value="__('Google Form URL')" />
+                            <x-text-input id="google_form_url" name="google_form_url" type="text"
+                                          class="block w-full mt-1"
+                                          placeholder="Masukkan URL Google Form"
+                                          :value="old('google_form_url', $latihanSoal->google_form_url ?? '')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('google_form_url')" />
+                        </div>
+
+
+                        <div class="mb-6">
                             <x-input-label for="image_path" :value="__('Upload Thumbnail')" />
                             <x-text-input id="image_path" name="image_path" type="file" class="w-full" />
                             <x-input-error class="mt-2" :messages="$errors->get('file_path')" />

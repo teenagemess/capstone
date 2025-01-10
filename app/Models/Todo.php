@@ -35,4 +35,9 @@ class Todo extends Model
     {
         return $this->belongsTo(JenjangCategory::class); // Relasi ke model JenjangCategory
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

@@ -23,6 +23,7 @@ class LatihanSoal extends Model
         'file_path',
         'description',
         'youtube_video_url', // Menambahkan youtube_video_url ke daftar fillable
+        'google_form_url', // Menambahkan youtube_video_url ke daftar fillable
     ];
 
     public function user()
@@ -38,5 +39,10 @@ class LatihanSoal extends Model
     public function jenjangCategory()
     {
         return $this->belongsTo(JenjangCategory::class); // Relasi ke model JenjangCategory
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
