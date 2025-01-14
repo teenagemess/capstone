@@ -13,6 +13,7 @@ use App\Http\Controllers\LatihanSoalCategoryFrontendController;
 use App\Http\Controllers\CategoryFrontendController;
 use App\Http\Controllers\LatihanSoalFrontendController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
 
 
 
@@ -27,12 +28,10 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 

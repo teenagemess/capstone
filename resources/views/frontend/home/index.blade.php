@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Learning Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js untuk menu mobile -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js"></script>
-</head>
-
-<body class="antialiased">
-    <!-- Header/Navigation -->
-    @include('layouts.navigation')
-
-
+<x-app-layout>
     <!-- Hero Section - Fullscreen Gradient Background -->
     <div class="min-h-screen text-white bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-700">
         <div class="px-4 mx-auto max-w-7xl">
@@ -271,6 +255,4 @@
         </div>
     </footer>
     </div>
-</body>
-
-</html>
+</x-app-layout>
