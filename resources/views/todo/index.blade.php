@@ -88,7 +88,8 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ $todo->description ?? 'No description' }}
+                                    {!! $todo->description !!}
+
                                 </td>
                                 <td class="px-6 py-4">
                                     @if ($todo->image_path)

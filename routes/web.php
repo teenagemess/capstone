@@ -73,6 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/latihan_soal', [LatihanSoalController::class, 'store'])->name('latihan_soal.store');
         Route::get('/latihan_soal/create', [LatihanSoalController::class, 'create'])->name('latihan_soal.create');
         Route::get('/latihan_soal/{latihan_soal}/edit', [LatihanSoalController::class, 'edit'])->name('latihan_soal.edit');
+        Route::patch('latihan_soal/{latihan_soal}', [LatihanSoalController::class, 'update'])->name('latihan_soal.update');
         Route::delete('/latihan_soal/{latihan_soal}', [LatihanSoalController::class, 'destroy'])->name('latihan_soal.destroy');
 
         Route::resource('/jenjang_category', JenjangCategoryController::class);

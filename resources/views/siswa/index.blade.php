@@ -13,6 +13,15 @@
                         <div>
                             <x-create-button href="{{ route('siswa.create') }}" />
                         </div>
+                        <form action="{{ route('siswa.index') }}" method="GET" class="flex items-center">
+                            <input type="text" name="search" placeholder="Cari siswa..."
+                                class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                value="{{ request('search') }}">
+                            <button type="submit"
+                                class="px-4 py-2 ml-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Cari
+                            </button>
+                        </form>
                         <div>
                             @if (session('success'))
                             <p x-data="{ show: true }" x-show="show" x-transition

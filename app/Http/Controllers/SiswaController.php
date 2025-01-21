@@ -10,10 +10,15 @@ class SiswaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // Mengambil semua siswa
-        $siswas = Siswa::all();
+        $query = $request->input('search');
+        $siswas = Siswa::when($query, function ($queryBuilder) use ($query) {
+            $queryBuilder->where('nama_siswa', 'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%")
+                ->orWhere('no_hp', 'like', "%{$query}%");
+        })->get();
         return view('siswa.index', compact('siswas'));
     }
 

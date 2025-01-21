@@ -2,21 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Todo;
 use App\Models\Category;
+use App\Models\Todo;
 use Illuminate\Http\Request;
-
 
 class TodoFrontendController extends Controller
 {
-    public function show(Category $category)
+    public function show(Request $request, Category $category)
     {
-        $todos = $category->todos()->with('category', 'jenjangCategory')->get();
+        // Mulai query dari relasi todos
+        $query = $category->todo()->with('category', 'jenjangCategory');
+
+        // Tambahkan pencarian berdasarkan title jika ada parameter 'search'
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Eksekusi query dan ambil hasilnya
+        $todos = $query->get();
+
         return view('frontend.categories.show', compact('category', 'todos'));
     }
+
 
     public function detail(Todo $todo)
     {
         return view('frontend.todos.detail', compact('todo'));
     }
 }
+
+

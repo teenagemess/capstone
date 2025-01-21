@@ -85,7 +85,7 @@ class TodoController extends Controller
                 })
             ],
             'description' => 'nullable|string', // Validasi deskripsi
-            'file_path' => 'nullable|file|mimes:pdf|max:10240', // Validasi file PDF
+            'file_path' => 'nullable|file|', // Validasi file PDF
             'image_path' => 'nullable|file|mimes:jpg,png|max:10240', // Validasi file PDF
             'youtube_video_url' => 'nullable|url',
         ]);
@@ -127,6 +127,7 @@ class TodoController extends Controller
 
     public function update(Request $request, Todo $todo)
     {
+        // Validasi input
         $request->validate([
             'title' => 'required|max:255',
             'category_id' => [
@@ -143,6 +144,8 @@ class TodoController extends Controller
             ],
             'description' => 'nullable|string', // Validasi deskripsi
             'file_path' => 'nullable|file|mimes:pdf|max:10240', // Validasi file PDF
+            'image_path' => 'nullable|file|mimes:jpg,png|max:10240', // Validasi file PDF
+            'youtube_video_url' => 'nullable|url',
         ]);
 
         // Handle file upload on update
@@ -157,6 +160,17 @@ class TodoController extends Controller
             $filePath = $todo->file_path; // Jika tidak ada file baru, gunakan file yang lama
         }
 
+        if ($request->hasFile('image_path')) {
+            // Hapus file lama jika ada
+            if ($todo->image_path && Storage::exists('public/' . $todo->image_path)) {
+                Storage::delete('public/' . $todo->image_path);
+            }
+            // Simpan file gambar baru
+            $imagePath = $request->file('image_path')->store('images', 'public');
+        } else {
+            $imagePath = $todo->image_path; // Jika tidak ada gambar baru, gunakan gambar yang lama
+        }
+
         // Update todo dengan data baru
         $todo->update([
             'title' => ucfirst($request->title),
@@ -164,10 +178,13 @@ class TodoController extends Controller
             'jenjang_category_id' => $request->jenjang_category_id,  // Update jenjang_category_id
             'description' => $request->description,
             'file_path' => $filePath,
+            'image_path' => $imagePath, // Menyimpan path image
+            'youtube_video_url' => $request->youtube_video_url, // Simpan URL YouTube
         ]);
 
-        return redirect()->route('todo.index')->with('success', 'Modul updated successfully!');
+        return redirect()->route('todo.index')->with('success', 'Todo updated successfully!');
     }
+
 
 
     public function complete(Todo $todo)

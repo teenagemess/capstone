@@ -126,6 +126,7 @@ class LatihanSoalController extends Controller
 
     public function update(Request $request, LatihanSoal $latihanSoal)
     {
+        // Validasi input
         $request->validate([
             'title' => 'required|max:255',
             'category_id' => [
@@ -144,9 +145,10 @@ class LatihanSoalController extends Controller
             'file_path' => 'nullable|file|mimes:pdf|max:10240',
             'image_path' => 'nullable|file|mimes:jpg,png|max:10240',
             'youtube_video_url' => 'nullable|url',
-            'google_form_url' => 'nullable|url', // Validasi URL Google Form
+            'google_form_url' => 'nullable|url',
         ]);
 
+        // Handle file upload (file_path and image_path)
         if ($request->hasFile('file_path')) {
             if ($latihanSoal->file_path && Storage::exists('public/' . $latihanSoal->file_path)) {
                 Storage::delete('public/' . $latihanSoal->file_path);
@@ -156,18 +158,30 @@ class LatihanSoalController extends Controller
             $filePath = $latihanSoal->file_path;
         }
 
+        if ($request->hasFile('image_path')) {
+            if ($latihanSoal->image_path && Storage::exists('public/' . $latihanSoal->image_path)) {
+                Storage::delete('public/' . $latihanSoal->image_path);
+            }
+            $imagePath = $request->file('image_path')->store('images', 'public');
+        } else {
+            $imagePath = $latihanSoal->image_path;
+        }
+
+        // Update LatihanSoal
         $latihanSoal->update([
             'title' => ucfirst($request->title),
             'category_id' => $request->category_id,
             'jenjang_category_id' => $request->jenjang_category_id,
             'description' => $request->description,
             'file_path' => $filePath,
+            'image_path' => $imagePath,
             'youtube_video_url' => $request->youtube_video_url,
-            'google_form_url' => $request->google_form_url, // Update Google Form URL
+            'google_form_url' => $request->google_form_url,
         ]);
 
         return redirect()->route('latihan_soal.index')->with('success', 'Latihan Soal updated successfully!');
     }
+
 
 
     public function complete(LatihanSoal $latihanSoal)

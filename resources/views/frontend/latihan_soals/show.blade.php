@@ -12,6 +12,30 @@
                     No latihan soal found for this category.
                 </p>
             @else
+            <form method="GET" action="{{ route('frontend.categories.show', $category) }}" class="mb-6">
+                <div class="flex items-center">
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Search by title..."
+                        class="w-full px-4 py-2 text-gray-800 border rounded-lg dark:bg-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    >
+                    {{-- <select name="jenjang_category_id" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-300">
+                        <option value="">-- Select Jenjang Category --</option>
+                        @foreach ($jenjangCategories as $jenjangCategory)
+                        <option value="{{ $jenjangCategory->id }}" {{ request('jenjang_category_id') == $jenjangCategory->id ? 'selected' : '' }}>
+                            {{ $jenjangCategory->title }}
+                        </option>
+                        @endforeach
+                    </select> --}}
+                    <button
+                        type="submit"
+                        class="px-4 py-2 ml-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        Search
+                    </button>
+            </div>
+            </form>
                 <div class="space-y-6">
                     @foreach ($latihanSoals as $latihanSoal)
                     <div class="flex w-full overflow-hidden transition duration-300 transform bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:scale-105 hover:shadow-xl" onclick="window.location='{{ route('frontend.latihan_soals.detail', $latihanSoal) }}';" style="cursor: pointer;">

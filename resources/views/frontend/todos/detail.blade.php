@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Todo Details') }}
+            {{ __('') }}
         </h2>
     </x-slot>
 
@@ -9,20 +9,28 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
 
             <div class="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+                <p class="mt-2 text-sm">
+                    <span class="inline-block px-4 py-2 text-sm font-bold text-blue-600 border rounded-lg bg-blue-50">
+                        {{ $todo->category->title ?? 'N/A' }}
+                    </span>
+                    <span class="inline-block px-4 py-2 text-sm font-bold text-green-600 border rounded-lg bg-green-50">
+                        {{ $todo->jenjangCategory->title ?? 'N/A' }}
+                    </span>
+                </p>
                 <!-- Thumbnail -->
                 @if ($todo->image_path)
-                    <img src="{{ Storage::url($todo->image_path) }}" alt="Thumbnail" class="w-full h-auto rounded-lg">
+                    {{-- <img src="{{ Storage::url($todo->image_path) }}" alt="Thumbnail" class="w-full h-auto rounded-lg"> --}}
                 @else
                     <div class="w-full h-64 bg-gray-300 rounded-lg"></div>
                 @endif
 
                 <div class="mt-6">
                     <!-- Title and Description -->
-                    <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                    <h3 class="mb-8 text-2xl font-semibold text-center text-gray-800 dark:text-gray-200">
                         {{ $todo->title }}
                     </h3>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">
-                        {{ $todo->description }}
+                        {!! $todo->description !!}
                     </p>
 
                     <!-- YouTube Video -->
@@ -60,8 +68,6 @@
 
                     <!-- Additional Details -->
                     <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                        <p>Kategori: {{ $todo->category->title ?? 'N/A' }}</p>
-                        <p>Jenjang: {{ $todo->jenjangCategory->title ?? 'N/A' }}</p>
                         <p>Due Date: {{ \Carbon\Carbon::parse($todo->due_date)->format('d M Y') }}</p>
                     </div>
 
@@ -75,15 +81,15 @@
             </div>
                             <!-- Form untuk menambah komentar -->
                             <div class="p-4 mt-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                                <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-gray-200">Tambahkan Komentar</h4>
+                                <h4 class="mb-4 text-xl font-semibold text-gray-800 dark:text-gray-200">Forum Diskusi</h4>
                                 <form action="{{ route('comments.storeTodo', $todo->id) }}" method="POST">
                                     @csrf
                                     <div class="mb-4">
-                                        <textarea name="content" rows="4" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Tulis komentar..."></textarea>
+                                        <textarea name="content" rows="4" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Tulis apa yang mau di diskusikan..."></textarea>
                                     </div>
                                     <div class="flex justify-end">
                                         <button type="submit" class="inline-block px-6 py-3 text-white transition duration-300 ease-in-out bg-blue-500 rounded-lg hover:bg-blue-600">
-                                            Kirim Komentar
+                                            Kirim
                                         </button>
                                     </div>
                                 </form>
@@ -91,7 +97,7 @@
 
                             <!-- Menampilkan komentar-komentar -->
                             <div class="p-4 mt-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                                <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Komentar</h4>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Diskusi</h4>
                                 @forelse($todo->comments as $comment)
                                     <div class="p-4 mt-4 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700">
                                         <div class="flex items-center">

@@ -3,20 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\jenjangCategory;
 use App\Models\LatihanSoal;
+use Illuminate\Http\Request;
 
 class LatihanSoalFrontendController extends Controller
 {
     /**
      * Menampilkan latihan soal berdasarkan kategori yang dipilih.
      */
-    public function show(Category $category)
+    public function show(Category $category, Request $request)
     {
-        // Mengambil semua latihan soal yang terkait dengan kategori
-        $latihanSoals = $category->latihanSoals()->with('category', 'jenjangCategory')->get();
+        // Ambil semua data JenjangCategory
+        $jenjangCategories = JenjangCategory::all();
 
-        return view('frontend.categories.show', compact('category', 'latihanSoals'));
+        // Query latihan soal berdasarkan kategori
+        $query = $category->latihanSoals()->with('category', 'jenjangCategory');
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('jenjang_category_id') && $request->jenjang_category_id) {
+            $query->where('jenjang_category_id', $request->jenjang_category_id);
+        }
+
+        $latihanSoals = $query->get();
+
+        return view('frontend.categories.show', compact('category', 'latihanSoals', 'jenjangCategories'));
     }
+
+
+
 
     /**
      * Menampilkan detail latihan soal.

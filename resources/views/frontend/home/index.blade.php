@@ -11,7 +11,7 @@
                         @auth
                             <a href="{{ url('/dashboard') }}"
                                 class="inline-block px-6 py-3 font-semibold text-blue-600 bg-white rounded-md hover:bg-gray-100">
-                                Go to Dashboard
+                                Explore Journey
                             </a>
                         @else
                             <a href="{{ route('register') }}"
@@ -76,150 +76,72 @@
         </div>
     </div>
 
-    <!-- Popular Courses Section -->
-    <div id="courses" class="py-12 bg-white md:py-20">
-        <div class="px-4 mx-auto max-w-7xl">
-            <h2 class="mb-8 text-2xl font-bold text-center text-gray-800 md:text-3xl md:mb-12">Popular Courses</h2>
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
-                <!-- Course 1 -->
-                <div class="overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                    <div class="w-full h-48">
-                        <img src="{{ asset('images/courses1.png') }}" alt="Course thumbnail"
+<!-- Popular Todos Section -->
+<div id="todos" class="py-12 bg-white md:py-20">
+    <div class="px-4 mx-auto max-w-7xl">
+        <h2 class="mb-8 text-2xl font-bold text-center text-gray-800 md:text-3xl md:mb-12">Courses</h2>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
+            @foreach($todos as $todo)
+                <!-- Single Todo Card -->
+                <div class="overflow-hidden transition duration-300 ease-in-out transform bg-white border border-gray-100 rounded-lg shadow-lg hover:scale-105 hover:shadow-xl">
+                    <div class="w-full h-72">
+                        <img src="{{ $todo->image_path ? asset('storage/' . $todo->image_path) : asset('images/default.png') }}"
+                            alt="Todo thumbnail"
                             class="object-cover w-full h-full">
                     </div>
                     <div class="p-6">
-                        <h3 class="mb-2 text-xl font-semibold text-gray-800">Mathematics for High School</h3>
-                        <p class="mb-4 text-gray-600">Master the concepts of high school math with our expert tutors.
-                        </p>
-                        <div
-                            class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-                            <span class="font-semibold text-blue-600">$49.99</span>
-                            <a href="#"
-                                class="w-full px-4 py-2 text-center text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Enroll
-                                Now</a>
-                        </div>
-                    </div>
-                </div>
+                        <h3 class="mb-2 text-xl font-semibold text-gray-800 ">{{ $todo->title }}</h3>
+                        <p class="mb-4 text-gray-600 line-clamp-3 text-ellipsis">{!! $todo->description !!}</p>
 
-                <!-- Course 2 -->
-                <div class="overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                    <div class="w-full h-48">
-                        <img src="{{ asset('images/courses2.png') }}" alt="Course thumbnail"
-                            class="object-cover w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="mb-2 text-xl font-semibold text-gray-800">English for Beginners</h3>
-                        <p class="mb-4 text-gray-600">Improve your English speaking and writing skills with our
-                            lessons.</p>
-                        <div
-                            class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-                            <span class="font-semibold text-blue-600">$39.99</span>
-                            <a href="#"
-                                class="w-full px-4 py-2 text-center text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Enroll
-                                Now</a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Course 3 -->
-                <div class="overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                    <div class="w-full h-48">
-                        <img src="{{ asset('images/courses3.png') }}" alt="Course thumbnail"
-                            class="object-cover w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="mb-2 text-xl font-semibold text-gray-800">Science Experiments</h3>
-                        <p class="mb-4 text-gray-600">Engage with fun and interactive science experiments for all ages.
+                        <!-- Category Badge with Bold Text -->
+                        <p class="mt-5 text-sm">
+                            <span class="inline-block px-4 py-2 text-sm font-bold text-blue-600 border rounded-lg bg-blue-50">
+                                {{ $todo->category->title ?? 'N/A' }}
+                            </span>
                         </p>
-                        <div
-                            class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-                            <span class="font-semibold text-blue-600">$59.99</span>
-                            <a href="#"
-                                class="w-full px-4 py-2 text-center text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Enroll
-                                Now</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Course 1 -->
-                <div class="overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                    <div class="w-full h-48">
-                        <img src="{{ asset('images/courses1.png') }}" alt="Course thumbnail"
-                            class="object-cover w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="mb-2 text-xl font-semibold text-gray-800">Mathematics for High School</h3>
-                        <p class="mb-4 text-gray-600">Master the concepts of high school math with our expert tutors.
-                        </p>
-                        <div
-                            class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-                            <span class="font-semibold text-blue-600">$49.99</span>
-                            <a href="#"
-                                class="w-full px-4 py-2 text-center text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Enroll
-                                Now</a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Course 2 -->
-                <div class="overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                    <div class="w-full h-48">
-                        <img src="{{ asset('images/courses2.png') }}" alt="Course thumbnail"
-                            class="object-cover w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="mb-2 text-xl font-semibold text-gray-800">English for Beginners</h3>
-                        <p class="mb-4 text-gray-600">Improve your English speaking and writing skills with our
-                            lessons.</p>
-                        <div
-                            class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-                            <span class="font-semibold text-blue-600">$39.99</span>
-                            <a href="#"
-                                class="w-full px-4 py-2 text-center text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Enroll
-                                Now</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Course 3 -->
-                <div class="overflow-hidden bg-white border border-gray-100 rounded-lg shadow-lg">
-                    <div class="w-full h-48">
-                        <img src="{{ asset('images/courses3.png') }}" alt="Course thumbnail"
-                            class="object-cover w-full h-full">
-                    </div>
-                    <div class="p-6">
-                        <h3 class="mb-2 text-xl font-semibold text-gray-800">Science Experiments</h3>
-                        <p class="mb-4 text-gray-600">Engage with fun and interactive science experiments for all ages.
+                        <!-- Jenjang Category Badge -->
+                        <p class="mt-2 text-sm">
+                            <span class="inline-block px-4 py-2 text-sm font-bold text-green-600 border rounded-lg bg-green-50">
+                                {{ $todo->jenjangCategory->title ?? 'N/A' }}
+                            </span>
                         </p>
-                        <div
-                            class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
-                            <span class="font-semibold text-blue-600">$59.99</span>
-                            <a href="#"
-                                class="w-full px-4 py-2 text-center text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Enroll
-                                Now</a>
+
+                        <!-- Centered Button in the Card -->
+                        <div class="flex justify-center mt-4">
+                            @auth
+                                <a href="{{ route('todo.show', $todo->id) }}"
+                                   class="w-64 px-6 py-3 text-center text-white bg-gray-800 border-transparent rounded-md hover:bg-blue-700 sm:w-auto">
+                                   View Details
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}"
+                                   class="w-64 px-6 py-3 text-center text-white bg-gray-800 border-transparent rounded-md hover:bg-blue-700 sm:w-auto">
+                                   Join Now
+                                </a>
+                            @endauth
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
+        </div>
+        <!-- Pagination -->
+        <div class="mt-8">
+            {{ $todos->links() }}
         </div>
     </div>
+</div>
 
 
-    <!-- CTA Section - Made Responsive -->
-    <div class="py-12 text-white bg-gray-900 md:py-16">
-        <div class="px-4 mx-auto text-center max-w-7xl">
-            <h2 class="mb-4 text-2xl font-bold md:text-3xl">Start Your Learning Journey Today</h2>
-            <p class="mb-8 text-lg">Join thousands of students who are already learning on our platform</p>
-            <a href="#"
-                class="inline-block w-full px-8 py-3 font-semibold text-white bg-blue-600 rounded-md sm:w-auto hover:bg-blue-700">Get
-                Started Now</a>
-        </div>
+
     </div>
     <!-- Footer -->
-    <footer class="py-12 text-white bg-gray-800">
+    <footer class="justify-center py-12 text-white bg-gray-800 justify-items-center">
         <div class="px-4 mx-auto max-w-7xl">
             <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                    <h3 class="mb-4 text-xl font-bold">EduLearn</h3>
+                    <h3 class="mb-4 text-xl font-bold">Smart Junior</h3>
                     <p class="text-gray-400">Empowering learners worldwide with quality education.</p>
                 </div>
                 <div>
@@ -232,25 +154,15 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="mb-4 text-lg font-semibold">Support</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Terms of Service</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
-                    </ul>
-                </div>
-                <div>
                     <h4 class="mb-4 text-lg font-semibold">Contact Us</h4>
                     <ul class="space-y-2">
-                        <li class="text-gray-400">Email: info@edulearn.com</li>
-                        <li class="text-gray-400">Phone: +1 234 567 890</li>
-                        <li class="text-gray-400">Address: 123 Learning Street, Education City</li>
+                        <li class="text-gray-400">Phone: 0857-4269-4886</li>
+                        <li class="text-gray-400">Address: Ngrame, RT.02, Ngrame, Tamantirto, Kec. Kasihan, Kabupaten Bantul, Daerah Istimewa Yogyakarta 55183</li>
                     </ul>
                 </div>
             </div>
             <div class="pt-8 mt-8 text-center border-t border-gray-700">
-                <p class="text-gray-400">&copy; 2025 EduLearn. All rights reserved.</p>
+                <p class="text-gray-400">&copy; 2025 Smart Junior. All rights reserved.</p>
             </div>
         </div>
     </footer>
