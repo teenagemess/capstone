@@ -7,22 +7,42 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div class="mb-6">
-            <form method="GET" action="{{ route('frontend.categories.show', $category) }}">
-                <div class="flex items-center">
-                    <input
-                        type="text"
-                        name="search"
-                        placeholder="Search by title..."
-                        value="{{ request('search') }}"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700"
-                    >
-                    <button type="submit" class="px-4 py-2 ml-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                        Search
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="mb-6">
+                <form method="GET" action="{{ route('frontend.categories.show', $category) }}">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <!-- Input Pencarian -->
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Search todos..."
+                            class="w-full px-4 py-2 border rounded-lg sm:w-1/2"
+                        >
+
+                        <!-- Dropdown Filter JenjangCategory -->
+                        <select
+                            name="jenjang_category"
+                            class="w-full px-4 py-2 border rounded-lg sm:w-1/4"
+                        >
+                            <option value="">All Levels</option>
+                            @foreach ($jenjangCategories as $jenjangCategory)
+                                <option
+                                    value="{{ $jenjangCategory->id }}"
+                                    {{ request('jenjang_category') == $jenjangCategory->id ? 'selected' : '' }}
+                                >
+                                    {{ $jenjangCategory->title }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <!-- Tombol Submit -->
+                        <button type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+                            Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <!-- Menampilkan Pesan Jika Tidak Ada Todos -->
             @if ($todos->isEmpty())
                 <p class="text-center text-gray-500 dark:text-gray-400">

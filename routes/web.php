@@ -43,19 +43,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/categories', [CategoryFrontendController::class, 'index'])->name('frontend.categories.index');
     Route::get('/categories/{category}', [CategoryFrontendController::class, 'show'])->name('frontend.categories.show');
 
-        // Route untuk menampilkan todos berdasarkan kategori
+
+    // Route untuk menampilkan todos berdasarkan kategori
     Route::get('/categories/{category}/todos', [TodoFrontendController::class, 'show'])->name('todo.frontend.category');
+
 
     // Route untuk menampilkan detail todo
     Route::get('/todos/{todo}', [TodoFrontendController::class, 'detail'])->name('todo.frontend.detail');
 
 
+
     Route::get('/todos', [TodoFrontendController::class, 'index'])->name('todo.index');
     Route::get('/todos/{id}', [TodoFrontendController::class, 'show'])->name('todo.show');
+    Route::get('/categories/{category}', [TodoFrontendController::class, 'show'])->name('frontend.categories.show');
 
+    // Route::get('/latihan-categories/{category}', [LatihanSoalFrontendController::class, 'show'])->name('frontend.latihan_soals.show');
+
+    Route::get('/latihan-soal/categories/{category}', [LatihanSoalFrontendController::class, 'show'])->name('frontend.latihan_soals.show');
     Route::get('/latihan-categories', [LatihanSoalCategoryFrontendController::class, 'index'])->name('frontend.latihan_soals.index');
     Route::get('/latihan-categories/{category}', [LatihanSoalCategoryFrontendController::class, 'show'])->name('frontend.latihan_soals.show');
     Route::get('/latihan-soal/{latihanSoal}', [LatihanSoalFrontendController::class, 'detail'])->name('frontend.latihan_soals.detail');
+
 
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::post('/latihan-soal/{latihanSoalId}/comments', [CommentController::class, 'store'])->name('comments.store');

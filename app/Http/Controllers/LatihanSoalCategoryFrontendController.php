@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\LatihanSoal;
+use App\Models\JenjangCategory;
+use Illuminate\Http\Request;
 
 class LatihanSoalCategoryFrontendController extends Controller
 {
@@ -17,13 +19,37 @@ class LatihanSoalCategoryFrontendController extends Controller
     }
 
     /**
-     * Menampilkan latihan soal berdasarkan kategori yang dipilih.
+     * Menampilkan latihan soal berdasarkan kategori yang dipilih dengan pencarian dan filter.
      */
-    public function show(Category $category)
+    public function show(Request $request, Category $category)
     {
-        // Mengambil latihan soal berdasarkan kategori yang dipilih
-        $latihanSoals = LatihanSoal::where('category_id', $category->id)->get();
+        // Ambil filter jenjang jika ada
+        $jenjangCategory = $request->input('jenjang_category');
 
-        return view('frontend.latihan_soals.show', compact('category', 'latihanSoals'));
+        // Ambil pencarian judul jika ada
+        $searchTitle = $request->input('search_title');
+
+        $latihanSoalsQuery = LatihanSoal::where('category_id', $category->id);
+
+        // Filter berdasarkan jenjang category jika ada
+        if ($jenjangCategory) {
+            $latihanSoalsQuery->whereHas('jenjangCategory', function ($query) use ($jenjangCategory) {
+                $query->where('title', $jenjangCategory);
+            });
+        }
+
+        // Filter berdasarkan judul jika ada
+        if ($searchTitle) {
+            $latihanSoalsQuery->where('title', 'like', '%' . $searchTitle . '%');
+        }
+
+        // Ambil latihan soal berdasarkan query yang sudah difilter
+        $latihanSoals = $latihanSoalsQuery->get();
+
+        // Ambil jenjang categories untuk filter dropdown
+        $jenjangCategories = JenjangCategory::all();
+
+        return view('frontend.latihan_soals.show', compact('category', 'latihanSoals', 'jenjangCategories', 'searchTitle', 'jenjangCategory'));
     }
 }
+
