@@ -42,6 +42,6 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/2.0.0/trix.umd.min.js"></script>
-        <script src="{{ mix('js/theme.js') }}" defer></script>
+        {{-- <script src="{{ mix('js/theme.js') }}" defer></script> --}}
     </body>
 </html>
